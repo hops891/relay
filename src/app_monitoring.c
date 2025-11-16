@@ -307,6 +307,10 @@ void monitoring_handler() {
                     protect_on |= PROTECT_VOLTAGE | PROTECT_VOLTAGE_SAVE;
                 }
 
+//                printf("current_prot[0] - %d, current_prot[1] - %d, current_prot[2] - %d, current_prot[3] - %d\r\n", current_prot[0], current_prot[1], current_prot[2], current_prot[3]);
+//                printf("power_prot[0]   - %d, power_prot[1]   - %d, power_prot[2]   - %d, power_prot[3]   - %d\r\n", power_prot[0], power_prot[1], power_prot[2], power_prot[3]);
+//                printf("voltage_prot[0] - %d, voltage_prot[1] - %d, voltage_prot[2] - %d, voltage_prot[3] - %d\r\n\r\n", voltage_prot[0], voltage_prot[1], voltage_prot[2], voltage_prot[3]);
+
                 for(uint8_t i = 0; i < 4; i++) {
                     if (i == 3) {
                         current_prot[i] = current;
