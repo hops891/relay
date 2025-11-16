@@ -288,8 +288,10 @@ void app_leaveCnfHandler(nlme_leave_cnf_t *pLeaveCnf)
 
     if(pLeaveCnf->status == SUCCESS) {
 
-        relay_settints_default();
-        energy_remove();
+        if (!g_appCtx.net_steer_start) {
+            relay_settints_default();
+            energy_remove();
+        }
 
         zb_deviceFactoryNewSet(true);
 

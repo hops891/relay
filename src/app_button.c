@@ -18,8 +18,11 @@ static void buttonKeepPressed(u8 btNum) {
         printf("The button was keep pressed for 5 seconds\r\n");
 #endif
 
+        light_on();
         zb_factoryReset();
 
+        energy_remove();
+        relay_settints_default();
         g_appCtx.net_steer_start = true;
         TL_ZB_TIMER_SCHEDULE(net_steer_start_offCb, NULL, TIMEOUT_1MIN30SEC);
         light_blink_start(90, 250, 750);
