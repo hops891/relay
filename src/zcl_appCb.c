@@ -232,7 +232,7 @@ static void app_zclWriteReqCmd(uint8_t epId, uint16_t clusterId, zclWriteCmd_t *
             if (attr[i].attrID == ZCL_ATTRID_RMS_EXTREME_UNDER_VOLTAGE) {
                 int16_t v_min = attr[i].attrData[0] & 0xff;
                 v_min |= (attr[i].attrData[1] << 8) & 0xffff;
-                printf("voltage_min: %d\r\n", v_min);
+//                printf("voltage_min: %d\r\n", v_min);
                 if (v_min >= VOLTAGE_MIN && v_min <= VOLTAGE_MAX) {
                     relay_settings.voltage_min = v_min;
                     save = true;
@@ -240,7 +240,7 @@ static void app_zclWriteReqCmd(uint8_t epId, uint16_t clusterId, zclWriteCmd_t *
             } else if (attr[i].attrID == ZCL_ATTRID_RMS_EXTREME_OVER_VOLTAGE) {
                 int16_t v_max = attr[i].attrData[0] & 0xff;
                 v_max |= (attr[i].attrData[1] << 8) & 0xffff;
-                printf("voltage_max: %d\r\n", v_max);
+//                printf("voltage_max: %d\r\n", v_max);
                 if (v_max >= VOLTAGE_MIN && v_max <= VOLTAGE_MAX) {
                     relay_settings.voltage_max = v_max;
                     save = true;
@@ -880,15 +880,15 @@ status_t app_onOffCb(zclIncomingAddrInfo_t *pAddrInfo, u8 cmdId, void *cmdPayloa
 #endif
             switch(cmdId){
                 case ZCL_CMD_ONOFF_ON:
-                    printf("pAddrInfo->dstEp: %d, cmd on\r\n", pAddrInfo->dstEp);
+//                    printf("pAddrInfo->dstEp: %d, cmd on\r\n", pAddrInfo->dstEp);
                     cmdOnOff_on(pAddrInfo->dstEp);
                     break;
                 case ZCL_CMD_ONOFF_OFF:
-                    printf("pAddrInfo->dstEp: %d, cmd off\r\n", pAddrInfo->dstEp);
+//                    printf("pAddrInfo->dstEp: %d, cmd off\r\n", pAddrInfo->dstEp);
                     cmdOnOff_off(pAddrInfo->dstEp);
                     break;
                 case ZCL_CMD_ONOFF_TOGGLE:
-                    printf("pAddrInfo->dstEp: %d, cmd toggle\r\n", pAddrInfo->dstEp);
+//                    printf("pAddrInfo->dstEp: %d, cmd toggle\r\n", pAddrInfo->dstEp);
                     cmdOnOff_toggle(pAddrInfo->dstEp);
                     break;
 //                case ZCL_CMD_OFF_WITH_EFFECT:
