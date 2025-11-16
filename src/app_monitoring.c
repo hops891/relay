@@ -8,17 +8,25 @@
 
 #define ID_ENERGY               0x0FED1410
 #define TOP_MASK                0xFFFFFFFF
+#define PROTECT_VOLTAGE         0x01
+#define PROTECT_CURRENT         0x02
+#define PROTECT_POWER           0x04
+#define PROTECT_VOLTAGE_SAVE    0x08
 
 static uint8_t  pkt_out[2] = {0x58, 0xAA};
 static uint8_t  pkt_in[PKT_SIZE] = {0};
-static uint16_t current, voltage, freq;
-static int16_t  power;
+static uint16_t current, current_prot[4], voltage, voltage_prot[4], freq;
+static int16_t  power, power_prot[4];
 static uint64_t cur_sum_delivered;
 static uint32_t new_energy, old_energy = 0;
 static uint8_t  default_energy_cons = false;
 static uint8_t  first_start = true;
+static bool     new_energy_save = false;
+static uint8_t  protect_on = 0;
+static uint8_t  onoff_state = 0;
 static energy_cons_t energy_cons = {0};
-static bool new_energy_save = false;
+
+ev_timer_event_t *timerAutoRestartEvt = NULL;
 
 #if UART_PRINTF_MODE && DEBUG_PACKAGE
 void static print_package(uint8_t *head, uint8_t *buff, size_t len) {
@@ -146,6 +154,32 @@ static void init_default_energy_cons() {
     energy_saveCb(NULL);
 }
 
+static int32_t auto_restartCb(void *args) {
+
+    uint8_t i = 0;
+
+    if (protect_on & (PROTECT_VOLTAGE | PROTECT_CURRENT | PROTECT_POWER)) {
+        if (get_relay_status(i)) cmdOnOff_off(dev_relay.unit_relay[i].ep);
+        return 0;
+    }
+
+    if (relay_settings.auto_restart && ((protect_on & PROTECT_VOLTAGE) || (protect_on & PROTECT_VOLTAGE_SAVE)) &&
+            !(protect_on & PROTECT_CURRENT) && !(protect_on & PROTECT_POWER) && onoff_state) {
+        cmdOnOff_on(dev_relay.unit_relay[i].ep);
+    }
+
+    timerAutoRestartEvt = NULL;
+    return -1;
+}
+
+void clear_auto_restart() {
+
+    protect_on = 0;
+
+    if (timerAutoRestartEvt) TL_ZB_TIMER_CANCEL(&timerAutoRestartEvt);
+
+}
+
 int32_t app_monitoringCb(void *arg) {
 
     TL_SCHEDULE_TASK(send_uart_commandCb, NULL);
@@ -158,6 +192,8 @@ void monitoring_handler() {
 
     size_t load_size = 0;
     uint8_t ch, complete = false;
+    int32_t pw;
+    uint8_t i = 0;
 
     app_monitoring_t *pkt = (app_monitoring_t*)pkt_in;
 
@@ -200,14 +236,16 @@ void monitoring_handler() {
             if (checksum(pkt_in, PKT_SIZE) == pkt->crc) {
                 current = (uint16_t)((float)(pkt->i_rms/BL0942_CURRENT_REF*100.0));
                 voltage = (uint16_t)((float)(pkt->v_rms/BL0942_VOLTAGE_REF*100.0));
-                power = (uint16_t)((float)(pkt->watt/BL0942_POWER_REF*100.0));
+                if (pkt->watt & 0x800000) pw = (pkt->watt | 0xFF000000) * -1;
+                else pw = pkt->watt;
+                power = (uint16_t)((float)(pw/BL0942_POWER_REF*1.0));
                 freq = (uint16_t)((float)(1000000.0/pkt->freq*100.0));
                 new_energy = (uint32_t)((float)(pkt->cf_cnt/BL0942_ENERGY_REF*100.0));
 
 #if UART_PRINTF_MODE && DEBUG_MONITORING
                 printf("current_adc: %d,%s current: %d\r\n", pkt->i_rms, pkt->i_rms > 9?"\t":"\t\t", current);
                 printf("voltage_adc: %d,%s voltage: %d\r\n", pkt->v_rms, pkt->v_rms > 9?"\t":"\t\t", voltage);
-                printf("power_adc:   %d,%s power:   %d\r\n", pkt->watt, pkt->watt > 9?"\t":"\t\t", power);
+                printf("power_adc:   %d,%s power:   %d, 0x%08x, 0x%04x\r\n", pkt->watt, (uint32_t)pkt->watt > 9?"\t":"\t\t", power, pkt->watt, power);
                 printf("freq_adc:    %d,%s freq:    %d\r\n", pkt->freq, pkt->freq > 9?"\t":"\t\t", freq);
                 printf("energy_adc:  %d,%s energy:  %d\r\n", pkt->cf_cnt, pkt->cf_cnt > 9?"\t":"\t\t", new_energy);
                 printf("new_energy:  %d,%s old_en:  %d\r\n", new_energy, new_energy > 9?"\t":"\t\t", old_energy);
@@ -218,6 +256,11 @@ void monitoring_handler() {
 #endif
                     first_start = false;
                     old_energy = new_energy;
+                    for (uint8_t i = 0; i < 4; i++) {
+                        current_prot[i] = current;
+                        power_prot[i] = power;
+                        voltage_prot[i] = voltage;
+                    }
                     return;
                 }
 
@@ -233,6 +276,59 @@ void monitoring_handler() {
                     energy_cons.energy = cur_sum_delivered;
                     energy_save();
                     zcl_setAttrVal(APP_ENDPOINT1, ZCL_CLUSTER_SE_METERING, ZCL_ATTRID_CURRENT_SUMMATION_DELIVERD, (uint8_t*)&cur_sum_delivered);
+                }
+
+                protect_on &= PROTECT_VOLTAGE_SAVE;
+
+                if (relay_settings.current_max &&
+                        current_prot[0] > relay_settings.current_max && current_prot[1] > relay_settings.current_max &&
+                        current_prot[2] > relay_settings.current_max && current_prot[3] > relay_settings.current_max &&
+                        current > relay_settings.current_max) {
+//                    printf("current\r\n");
+                    protect_on |= PROTECT_CURRENT;
+                }
+
+                if (relay_settings.power_max &&
+                        power_prot[0] > relay_settings.power_max && power_prot[1] > relay_settings.power_max &&
+                        power_prot[2] > relay_settings.power_max && power_prot[3] > relay_settings.power_max &&
+                        power > relay_settings.power_max) {
+//                    printf("power: %d, power_max: %d\r\n", power, relay_settings.power_max);
+                    protect_on |= PROTECT_POWER;
+                }
+
+                if ((relay_settings.voltage_min &&
+                        voltage_prot[0] < relay_settings.voltage_min && voltage_prot[1] < relay_settings.voltage_min &&
+                        voltage_prot[2] < relay_settings.voltage_min && voltage_prot[3] < relay_settings.voltage_min &&
+                        voltage < relay_settings.voltage_min) || (relay_settings.voltage_max &&
+                        voltage_prot[0] > relay_settings.voltage_max && voltage_prot[1] > relay_settings.voltage_max &&
+                        voltage_prot[2] > relay_settings.voltage_max && voltage_prot[3] > relay_settings.voltage_max &&
+                        voltage > relay_settings.voltage_max)) {
+//                    printf("voltage_prot: %d, voltage: %d\r\n", voltage_prot, voltage);
+                    protect_on |= PROTECT_VOLTAGE | PROTECT_VOLTAGE_SAVE;
+                }
+
+//                printf("current_prot[0] - %d, current_prot[1] - %d, current_prot[2] - %d, current_prot[3] - %d\r\n", current_prot[0], current_prot[1], current_prot[2], current_prot[3]);
+//                printf("power_prot[0]   - %d, power_prot[1]   - %d, power_prot[2]   - %d, power_prot[3]   - %d\r\n", power_prot[0], power_prot[1], power_prot[2], power_prot[3]);
+//                printf("voltage_prot[0] - %d, voltage_prot[1] - %d, voltage_prot[2] - %d, voltage_prot[3] - %d\r\n\r\n", voltage_prot[0], voltage_prot[1], voltage_prot[2], voltage_prot[3]);
+
+                for(uint8_t i = 0; i < 4; i++) {
+                    if (i == 3) {
+                        current_prot[i] = current;
+                        power_prot[i] = power;
+                        voltage_prot[i] = voltage;
+                    } else {
+                        current_prot[i] = current_prot[i+1];
+                        power_prot[i] = power_prot[i+1];
+                        voltage_prot[i] = voltage_prot[i+1];
+                    }
+                }
+
+                if (relay_settings.protect_control && protect_on && relay_settings.status_onoff[i]) {
+                    if (!timerAutoRestartEvt) {
+                        onoff_state = relay_settings.status_onoff[i];
+                        cmdOnOff_off(dev_relay.unit_relay[i].ep);
+                        timerAutoRestartEvt = TL_ZB_TIMER_SCHEDULE(auto_restartCb, NULL, (relay_settings.time_reload * 1000));
+                    }
                 }
             }
         }
@@ -278,7 +374,7 @@ void energy_restore() {
         energy_cons.flash_addr_start = flash_addr-FLASH_PAGE_SIZE;
         g_zcl_seAttrs.cur_sum_delivered = energy_cons.energy;
 #if UART_PRINTF_MODE && DEBUG_SAVE
-        printf("Read config from flash address - 0x%x\r\n", energy_cons.flash_addr_start);
+        printf("Read energy_cons from flash address - 0x%x\r\n", energy_cons.flash_addr_start);
 #endif /* UART_PRINTF_MODE */
     } else {
 #if UART_PRINTF_MODE && DEBUG_SAVE
