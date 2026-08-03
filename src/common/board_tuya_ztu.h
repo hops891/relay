@@ -9,23 +9,30 @@ extern "C" {
 #endif
 
 /************************* Configure SWITCH GPIO ***************************************/
-#define SWITCH1_GPIO            GPIO_PD2
-#define PD2_INPUT_ENABLE        ON
+#define SWITCH1_GPIO            GPIO_PB6
+#define PB5_INPUT_ENABLE        ON
 //#define PD2_DATA_OUT            OFF
-#define PD2_OUTPUT_ENABLE       OFF
-#define PD2_FUNC                AS_GPIO
-//#define PULL_WAKEUP_SRC_PD4     PM_PIN_PULLDOWN_100K
+#define PB5_OUTPUT_ENABLE       OFF
+#define PB5_FUNC                AS_GPIO
+#define PULL_WAKEUP_SRC_PB5     PM_PIN_PULLUP_10K
+
+#define SWITCH2_GPIO            GPIO_PB5
+#define PB6_INPUT_ENABLE        ON
+//#define PD2_DATA_OUT            OFF
+#define PB6_OUTPUT_ENABLE       OFF
+#define PB6_FUNC                AS_GPIO
+#define PULL_WAKEUP_SRC_PB6     PM_PIN_PULLUP_10K
 
 
 /************************* Configure KEY GPIO ***************************************/
 #define MAX_BUTTON_NUM  1
 
-#define BUTTON                  GPIO_PB5
-#define PB5_INPUT_ENABLE        ON
-#define PB5_DATA_OUT            OFF
-#define PB5_OUTPUT_ENABLE       OFF
-#define PB5_FUNC                AS_GPIO
-#define PULL_WAKEUP_SRC_PB5     PM_PIN_PULLUP_10K
+#define BUTTON                  GPIO_PD3
+#define PD3_INPUT_ENABLE        ON
+#define PD3_DATA_OUT            OFF
+#define PD3_OUTPUT_ENABLE       OFF
+#define PD3_FUNC                AS_GPIO
+#define PULL_WAKEUP_SRC_PD3     PM_PIN_PULLUP_10K
 
 enum {
     VK_SW1 = 0x01,
@@ -41,14 +48,13 @@ enum {
 #define KB_SCAN_PINS   {BUTTON}
 
 /************************** Configure LED ****************************************/
-
 #define LED_ON                  0
 #define LED_OFF                 1
 
-#define LED_GPIO                GPIO_PB4
-#define PB4_FUNC                AS_GPIO
-#define PB4_OUTPUT_ENABLE       ON
-#define PB4_INPUT_ENABLE        OFF
+#define LED_GPIO                GPIO_PD4
+#define PD4_FUNC                AS_GPIO
+#define PD4_OUTPUT_ENABLE       ON
+#define PD4_INPUT_ENABLE        OFF
 
 #if (__PROJECT_TL_BOOT_LOADER__)
 
@@ -66,11 +72,17 @@ enum {
 #define RELAY_ON                1
 #define RELAY_OFF               0
 
-#define RELAY1_GPIO             GPIO_PC3
-#define PC3_FUNC                AS_GPIO
-#define PC3_OUTPUT_ENABLE       ON
-#define PC3_INPUT_ENABLE        ON
-#define PC3_DATA_OUT            RELAY_OFF
+#define RELAY1_GPIO             GPIO_PA1
+#define PA1_FUNC                AS_GPIO
+#define PA1_OUTPUT_ENABLE       ON
+#define PA1_INPUT_ENABLE        ON
+#define PA1_DATA_OUT            RELAY_OFF
+
+#define RELAY2_GPIO             GPIO_PD7
+#define PD7_FUNC                AS_GPIO
+#define PD7_OUTPUT_ENABLE       ON
+#define PD7_INPUT_ENABLE        ON
+#define PD7_DATA_OUT            RELAY_OFF
 
 /**************************** Configure UART for BL0942 ***********************************/
 #define BAUDRATE_UART           4800
