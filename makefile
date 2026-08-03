@@ -223,10 +223,12 @@ pre-build:
 post-build:
 	-"$(TOOLS_PATH)/tl_check_fw.sh" $(OUT_PATH)/$(PROJECT_NAME) tc32
 	-@echo ' '
+
 install:  $(COMPILE_PREFIX)
 	@echo "TC32 installed."
     @echo "Use: make clean"
     @echo "     make all"
+
 $(COMPILE_PREFIX): $(TOOLS_PATH)
 	@tar -xvjf $(TOOLS_PATH)/tc32_gcc_v2.0.tar.bz2 -C $(TOOLS_PATH)
 
