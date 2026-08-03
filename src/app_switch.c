@@ -72,7 +72,16 @@ static int32_t switch_counterFrCb(void *args) {
 //        printf("Factory reset\r\n");
 //        TL_SCHEDULE_TASK(switch_factory_reset_start, NULL);
     }
-
+    if (app_switch[i].counter == 8) {
+        if (relay_settings.switchType[0] != ZCL_SWITCH_TYPE_MULTIFUNCTION) {
+            relay_settings.switchType[0] = ZCL_SWITCH_TYPE_MULTIFUNCTION;
+            relay_settings.switchType[1] = ZCL_SWITCH_TYPE_MULTIFUNCTION;
+        } else {
+        relay_settings.switchType[0] = ZCL_SWITCH_TYPE_TOGGLE;
+        relay_settings.switchType[1] = ZCL_SWITCH_TYPE_TOGGLE;
+        }
+        relay_settings_save();
+    }
     if (app_switch[i].status == SWITCH_OFF && relay_settings.switchType [i] != ZCL_SWITCH_TYPE_MULTIFUNCTION) {
         if (relay_settings.switchType[i] == ZCL_SWITCH_TYPE_MOMENTARY) {
 #if UART_PRINTF_MODE && DEBUG_SWITCH
