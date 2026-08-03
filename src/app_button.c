@@ -73,10 +73,10 @@ static void buttonCheckCommand(uint8_t btNum) {
 
     if (g_appCtx.button[btNum-1].ctn == 1) {
         buttonSinglePressed(btNum);
-//    } else if (g_appCtx.button[btNum-1].ctn == 2) {
-//        buttonDoublePressed(btNum);
-//    } else if (g_appCtx.button[btNum-1].ctn == 3) {
-//        buttonTriplePressed(btNum);
+    } else if (g_appCtx.button[btNum-1].ctn == 2) {
+        buttonDoublePressed(btNum);
+    } else if (g_appCtx.button[btNum-1].ctn == 3) {
+        buttonTriplePressed(btNum);
 //    } else if (g_appCtx.button[btNum-1].ctn == 4) {
 //        buttonQuadruplePressed(btNum);
     }
