@@ -56,10 +56,29 @@ const uint16_t app_ep1_inClusterList[] = {
     ZCL_CLUSTER_GEN_ON_OFF_SWITCH_CONFIG,
 #endif
     ZCL_CLUSTER_GEN_MULTISTATE_INPUT_BASIC,
-    ZCL_CLUSTER_SE_METERING,
-    ZCL_CLUSTER_MS_ELECTRICAL_MEASUREMENT,
 };
 
+const uint16_t app_ep2_inClusterList[] = {
+    ZCL_CLUSTER_GEN_BASIC,
+    ZCL_CLUSTER_GEN_IDENTIFY,
+#ifdef ZCL_GROUP
+    ZCL_CLUSTER_GEN_GROUPS,
+#endif
+#ifdef ZCL_SCENE
+    ZCL_CLUSTER_GEN_SCENES,
+#endif
+#ifdef ZCL_ZLL_COMMISSIONING
+    ZCL_CLUSTER_TOUCHLINK_COMMISSIONING,
+#endif
+#ifdef ZCL_POLL_CTRL
+    ZCL_CLUSTER_GEN_POLL_CONTROL,
+#endif
+#ifdef ZCL_ON_OFF
+    ZCL_CLUSTER_GEN_ON_OFF,
+    ZCL_CLUSTER_GEN_ON_OFF_SWITCH_CONFIG,
+#endif
+    ZCL_CLUSTER_GEN_MULTISTATE_INPUT_BASIC,
+};
 /**
  *  @brief Definition for Outgoing cluster / Client Cluster
  */
@@ -73,12 +92,23 @@ const uint16_t app_ep1_outClusterList[] = {
 //    ZCL_CLUSTER_GEN_TIME,
 };
 
+const uint16_t app_ep2_outClusterList[] = {
+#ifdef ZCL_ON_OFF
+    ZCL_CLUSTER_GEN_ON_OFF,
+#endif
+#ifdef ZCL_OTA
+    ZCL_CLUSTER_OTA,
+#endif
+//    ZCL_CLUSTER_GEN_TIME,
+};
 /**
  *  @brief Definition for Server cluster number and Client cluster number
  */
 #define APP_EP1_IN_CLUSTER_NUM      (sizeof(app_ep1_inClusterList)/sizeof(app_ep1_inClusterList[0]))
 #define APP_EP1_OUT_CLUSTER_NUM     (sizeof(app_ep1_outClusterList)/sizeof(app_ep1_outClusterList[0]))
 
+#define APP_EP2_IN_CLUSTER_NUM      (sizeof(app_ep2_inClusterList)/sizeof(app_ep2_inClusterList[0]))
+#define APP_EP2_OUT_CLUSTER_NUM     (sizeof(app_ep2_outClusterList)/sizeof(app_ep2_outClusterList[0]))
 /**
  *  @brief Definition for simple description for HA profile
  */
@@ -95,54 +125,19 @@ const af_simple_descriptor_t app_ep1_simpleDesc =
     (uint16_t *)app_ep1_outClusterList,         /* Application output cluster list */
 };
 
+const af_simple_descriptor_t app_ep2_simpleDesc =
+{
+    HA_PROFILE_ID,                          /* Application profile identifier */
+    HA_DEV_ONOFF_LIGHT,		                /* Application device identifier */
+    APP_ENDPOINT2,                          /* Endpoint */
+    1,                                      /* Application device version */
+    0,                                      /* Reserved */
+    APP_EP2_IN_CLUSTER_NUM,                     /* Application input cluster count */
+    APP_EP2_OUT_CLUSTER_NUM,                    /* Application output cluster count */
+    (uint16_t *)app_ep2_inClusterList,          /* Application input cluster list */
+    (uint16_t *)app_ep2_outClusterList,         /* Application output cluster list */
+};
 
-///**
-// *  @brief Definition for Incoming cluster / Sever Cluster
-// */
-//const uint16_t app_ep2_inClusterList[] = {
-//#ifdef ZCL_GROUP
-//    ZCL_CLUSTER_GEN_GROUPS,
-//#endif
-//#ifdef ZCL_SCENE
-//    ZCL_CLUSTER_GEN_SCENES,
-//#endif
-//#ifdef ZCL_ON_OFF
-//    ZCL_CLUSTER_GEN_ON_OFF,
-//    ZCL_CLUSTER_GEN_ON_OFF_SWITCH_CONFIG,
-//#endif
-//    ZCL_CLUSTER_GEN_MULTISTATE_INPUT_BASIC,
-//};
-//
-///**
-// *  @brief Definition for Outgoing cluster / Client Cluster
-// */
-//const uint16_t app_ep2_outClusterList[] = {
-//#ifdef ZCL_ON_OFF
-//    ZCL_CLUSTER_GEN_ON_OFF,
-//#endif
-//};
-//
-///**
-// *  @brief Definition for Server cluster number and Client cluster number
-// */
-//#define APP_EP2_IN_CLUSTER_NUM      (sizeof(app_ep2_inClusterList)/sizeof(app_ep2_inClusterList[0]))
-//#define APP_EP2_OUT_CLUSTER_NUM     (sizeof(app_ep2_outClusterList)/sizeof(app_ep2_outClusterList[0]))
-//
-///**
-// *  @brief Definition for simple description for HA profile
-// */
-//const af_simple_descriptor_t app_ep2_simpleDesc =
-//{
-//    HA_PROFILE_ID,                          /* Application profile identifier */
-//    HA_DEV_ONOFF_LIGHT,                     /* Application device identifier */
-//    APP_ENDPOINT2,                          /* Endpoint */
-//    1,                                      /* Application device version */
-//    0,                                      /* Reserved */
-//    APP_EP2_IN_CLUSTER_NUM,                     /* Application input cluster count */
-//    APP_EP2_OUT_CLUSTER_NUM,                    /* Application output cluster count */
-//    (uint16_t *)app_ep2_inClusterList,          /* Application input cluster list */
-//    (uint16_t *)app_ep2_outClusterList,         /* Application output cluster list */
-//};
 
 /* Basic */
 zcl_basicAttr_t g_zcl_basicAttrs =
@@ -230,12 +225,12 @@ zcl_msInputAttr_t g_zcl_msInputAttrs[AMT_RELAY] = {
         .out_of_service = 0,
         .status_flag = 0,
     },
-//    {
-//        .value = ACTION_EMPTY,
-//        .num = 8,
-//        .out_of_service = 0,
-//        .status_flag = 0,
-//    }
+    {
+        .value = ACTION_EMPTY,
+        .num = 8,
+        .out_of_service = 0,
+        .status_flag = 0,
+    }
 };
 
 const zclAttrInfo_t msInput1_attrTbl[] = {
@@ -250,24 +245,21 @@ const zclAttrInfo_t msInput1_attrTbl[] = {
 
 #define ZCL_MSINPUT1_ATTR_NUM   sizeof(msInput1_attrTbl) / sizeof(zclAttrInfo_t)
 
-//const zclAttrInfo_t msInput2_attrTbl[] = {
-//        { ZCL_MULTISTATE_INPUT_ATTRID_OUT_OF_SERVICE,   ZCL_BOOLEAN,    RW,     (uint8_t*)&g_zcl_msInputAttrs[1].out_of_service },
-//        { ZCL_MULTISTATE_INPUT_ATTRID_PRESENT_VALUE,    ZCL_UINT16,     RWR,    (uint8_t*)&g_zcl_msInputAttrs[1].value          },
-//        { ZCL_MULTISTATE_INPUT_ATTRID_STATUS_FLAGS,     ZCL_BITMAP8,    RR,     (uint8_t*)&g_zcl_msInputAttrs[1].status_flag    },
-//        { ZCL_MULTISTATE_INPUT_ATTRID_NUM_OF_STATES,    ZCL_UINT16,     R,      (uint8_t*)&g_zcl_msInputAttrs[1].num            },
-//
-//        { ZCL_ATTRID_GLOBAL_CLUSTER_REVISION,           ZCL_UINT16,     R,      (uint8_t*)&zcl_attr_global_clusterRevision      },
-//
-//};
-//
-//#define ZCL_MSINPUT2_ATTR_NUM   sizeof(msInput2_attrTbl) / sizeof(zclAttrInfo_t)
+const zclAttrInfo_t msInput2_attrTbl[] = {
+        { ZCL_MULTISTATE_INPUT_ATTRID_OUT_OF_SERVICE,   ZCL_BOOLEAN,    RW,     (uint8_t*)&g_zcl_msInputAttrs[1].out_of_service },
+        { ZCL_MULTISTATE_INPUT_ATTRID_PRESENT_VALUE,    ZCL_UINT16,     RWR,    (uint8_t*)&g_zcl_msInputAttrs[1].value          },
+        { ZCL_MULTISTATE_INPUT_ATTRID_STATUS_FLAGS,     ZCL_BITMAP8,    RR,     (uint8_t*)&g_zcl_msInputAttrs[1].status_flag    },
+        { ZCL_MULTISTATE_INPUT_ATTRID_NUM_OF_STATES,    ZCL_UINT16,     R,      (uint8_t*)&g_zcl_msInputAttrs[1].num            },
+        { ZCL_ATTRID_GLOBAL_CLUSTER_REVISION,           ZCL_UINT16,     R,      (uint8_t*)&zcl_attr_global_clusterRevision      },
+};
+#define ZCL_MSINPUT2_ATTR_NUM   sizeof(msInput2_attrTbl) / sizeof(zclAttrInfo_t)
 
 #ifdef ZCL_GROUP
 /* Group */
 zcl_groupAttr_t g_zcl_groupAttrs[AMT_RELAY] =
 {
     {.nameSupport = 0},
-//    {.nameSupport = 0}
+    {.nameSupport = 0}
 };
 
 const zclAttrInfo_t group1_attrTbl[] =
@@ -279,14 +271,12 @@ const zclAttrInfo_t group1_attrTbl[] =
 
 #define ZCL_GROUP1_ATTR_NUM    sizeof(group1_attrTbl) / sizeof(zclAttrInfo_t)
 
-//const zclAttrInfo_t group2_attrTbl[] =
-//{
-//    { ZCL_ATTRID_GROUP_NAME_SUPPORT,        ZCL_BITMAP8,    R,  (uint8_t*)&g_zcl_groupAttrs[1].nameSupport     },
-//
-//    { ZCL_ATTRID_GLOBAL_CLUSTER_REVISION,   ZCL_UINT16,     R,  (uint8_t*)&zcl_attr_global_clusterRevision  },
-//};
-//
-//#define ZCL_GROUP2_ATTR_NUM    sizeof(group2_attrTbl) / sizeof(zclAttrInfo_t)
+const zclAttrInfo_t group2_attrTbl[] =
+{
+    { ZCL_ATTRID_GROUP_NAME_SUPPORT,        ZCL_BITMAP8,    R,  (uint8_t*)&g_zcl_groupAttrs[1].nameSupport     },
+    { ZCL_ATTRID_GLOBAL_CLUSTER_REVISION,   ZCL_UINT16,     R,  (uint8_t*)&zcl_attr_global_clusterRevision  },
+};
+#define ZCL_GROUP2_ATTR_NUM    sizeof(group2_attrTbl) / sizeof(zclAttrInfo_t)
 
 #endif
 
@@ -301,13 +291,13 @@ zcl_sceneAttr_t g_zcl_sceneAttrs[AMT_RELAY] =
         .sceneValid     = FALSE,
         .nameSupport    = 0,
     },
-//    {
-//        .sceneCount     = 0,
-//        .currentScene   = 0,
-//        .currentGroup   = 0x0000,
-//        .sceneValid     = FALSE,
-//        .nameSupport    = 0,
-//    }
+    {
+        .sceneCount     = 0,
+        .currentScene   = 0,
+        .currentGroup   = 0x0000,
+        .sceneValid     = FALSE,
+        .nameSupport    = 0,
+    }
 };
 
 const zclAttrInfo_t scene1_attrTbl[] = {
@@ -322,17 +312,15 @@ const zclAttrInfo_t scene1_attrTbl[] = {
 
 #define ZCL_SCENE1_ATTR_NUM   sizeof(scene1_attrTbl) / sizeof(zclAttrInfo_t)
 
-//const zclAttrInfo_t scene2_attrTbl[] = {
-//    { ZCL_ATTRID_SCENE_SCENE_COUNT,         ZCL_UINT8,    R,  (uint8_t*)&g_zcl_sceneAttrs[1].sceneCount     },
-//    { ZCL_ATTRID_SCENE_CURRENT_SCENE,       ZCL_UINT8,    R,  (uint8_t*)&g_zcl_sceneAttrs[1].currentScene   },
-//    { ZCL_ATTRID_SCENE_CURRENT_GROUP,       ZCL_UINT16,   R,  (uint8_t*)&g_zcl_sceneAttrs[1].currentGroup   },
-//    { ZCL_ATTRID_SCENE_SCENE_VALID,         ZCL_BOOLEAN,  R,  (uint8_t*)&g_zcl_sceneAttrs[1].sceneValid     },
-//    { ZCL_ATTRID_SCENE_NAME_SUPPORT,        ZCL_BITMAP8,  R,  (uint8_t*)&g_zcl_sceneAttrs[1].nameSupport    },
-//
-//    { ZCL_ATTRID_GLOBAL_CLUSTER_REVISION,   ZCL_UINT16,   R,  (uint8_t*)&zcl_attr_global_clusterRevision},
-//};
-//
-//#define ZCL_SCENE2_ATTR_NUM   sizeof(scene2_attrTbl) / sizeof(zclAttrInfo_t)
+const zclAttrInfo_t scene2_attrTbl[] = {
+    { ZCL_ATTRID_SCENE_SCENE_COUNT,         ZCL_UINT8,    R,  (uint8_t*)&g_zcl_sceneAttrs[1].sceneCount     },
+    { ZCL_ATTRID_SCENE_CURRENT_SCENE,       ZCL_UINT8,    R,  (uint8_t*)&g_zcl_sceneAttrs[1].currentScene   },
+    { ZCL_ATTRID_SCENE_CURRENT_GROUP,       ZCL_UINT16,   R,  (uint8_t*)&g_zcl_sceneAttrs[1].currentGroup   },
+    { ZCL_ATTRID_SCENE_SCENE_VALID,         ZCL_BOOLEAN,  R,  (uint8_t*)&g_zcl_sceneAttrs[1].sceneValid     },
+    { ZCL_ATTRID_SCENE_NAME_SUPPORT,        ZCL_BITMAP8,  R,  (uint8_t*)&g_zcl_sceneAttrs[1].nameSupport    },
+    { ZCL_ATTRID_GLOBAL_CLUSTER_REVISION,   ZCL_UINT16,   R,  (uint8_t*)&zcl_attr_global_clusterRevision},
+};
+#define ZCL_SCENE2_ATTR_NUM   sizeof(scene2_attrTbl) / sizeof(zclAttrInfo_t)
 
 #endif
 
@@ -348,13 +336,13 @@ zcl_onOffAttr_t g_zcl_onOffAttrs[AMT_RELAY] = {
         .offWaitTime        = 0x0000,
         .startUpOnOff       = ZCL_START_UP_ONOFF_SET_ONOFF_TO_OFF,
     },
-//    {
-//        .onOff              = 0x00,
-//        .globalSceneControl = 1,
-//        .onTime             = 0x0000,
-//        .offWaitTime        = 0x0000,
-//        .startUpOnOff       = ZCL_START_UP_ONOFF_SET_ONOFF_TO_OFF,
-//    }
+    {
+        .onOff              = 0x00,
+        .globalSceneControl = 1,
+        .onTime             = 0x0000,
+        .offWaitTime        = 0x0000,
+        .startUpOnOff       = ZCL_START_UP_ONOFF_SET_ONOFF_TO_OFF,
+    }
 };
 
 const zclAttrInfo_t onOff1_attrTbl[] = {
@@ -369,17 +357,15 @@ const zclAttrInfo_t onOff1_attrTbl[] = {
 
 #define ZCL_ONOFF1_ATTR_NUM   sizeof(onOff1_attrTbl) / sizeof(zclAttrInfo_t)
 
-//const zclAttrInfo_t onOff2_attrTbl[] = {
-//    { ZCL_ATTRID_ONOFF,                     ZCL_BOOLEAN,    RR,     (uint8_t*)&g_zcl_onOffAttrs[1].onOff               },
-//    { ZCL_ATTRID_GLOBAL_SCENE_CONTROL,      ZCL_BOOLEAN,    R,      (uint8_t*)&g_zcl_onOffAttrs[1].globalSceneControl  },
-//    { ZCL_ATTRID_ON_TIME,                   ZCL_UINT16,     RW,     (uint8_t*)&g_zcl_onOffAttrs[1].onTime              },
-//    { ZCL_ATTRID_OFF_WAIT_TIME,             ZCL_UINT16,     RW,     (uint8_t*)&g_zcl_onOffAttrs[1].offWaitTime         },
-//    { ZCL_ATTRID_START_UP_ONOFF,            ZCL_ENUM8,      RW,     (uint8_t*)&g_zcl_onOffAttrs[1].startUpOnOff        },
-//
-//    { ZCL_ATTRID_GLOBAL_CLUSTER_REVISION,   ZCL_UINT16,     R,      (uint8_t*)&zcl_attr_global_clusterRevision      },
-//};
-//
-//#define ZCL_ONOFF2_ATTR_NUM   sizeof(onOff2_attrTbl) / sizeof(zclAttrInfo_t)
+const zclAttrInfo_t onOff2_attrTbl[] = {
+    { ZCL_ATTRID_ONOFF,                     ZCL_BOOLEAN,    RR,     (uint8_t*)&g_zcl_onOffAttrs[1].onOff               },
+    { ZCL_ATTRID_GLOBAL_SCENE_CONTROL,      ZCL_BOOLEAN,    R,      (uint8_t*)&g_zcl_onOffAttrs[1].globalSceneControl  },
+    { ZCL_ATTRID_ON_TIME,                   ZCL_UINT16,     RW,     (uint8_t*)&g_zcl_onOffAttrs[1].onTime              },
+    { ZCL_ATTRID_OFF_WAIT_TIME,             ZCL_UINT16,     RW,     (uint8_t*)&g_zcl_onOffAttrs[1].offWaitTime         },
+    { ZCL_ATTRID_START_UP_ONOFF,            ZCL_ENUM8,      RW,     (uint8_t*)&g_zcl_onOffAttrs[1].startUpOnOff        },
+    { ZCL_ATTRID_GLOBAL_CLUSTER_REVISION,   ZCL_UINT16,     R,      (uint8_t*)&zcl_attr_global_clusterRevision      },
+};
+#define ZCL_ONOFF2_ATTR_NUM   sizeof(onOff2_attrTbl) / sizeof(zclAttrInfo_t)
 
 #endif
 
@@ -394,12 +380,12 @@ zcl_onOffCfgAttr_t g_zcl_onOffCfgAttrs[AMT_RELAY] = {
         .custom_swtichType = ZCL_SWITCH_TYPE_MOMENTARY,
         .custom_decoupled  = CUSTOM_SWITCH_DECOUPLED_OFF,
     },
-//    {
-//        .switchType        = ZCL_SWITCH_TYPE_MOMENTARY,
-//        .switchActions     = ZCL_SWITCH_ACTION_OFF_ON,
-//        .custom_swtichType = ZCL_SWITCH_TYPE_MOMENTARY,
-//        .custom_decoupled  = CUSTOM_SWITCH_DECOUPLED_OFF,
-//    }
+    {
+        .switchType        = ZCL_SWITCH_TYPE_MOMENTARY,
+        .switchActions     = ZCL_SWITCH_ACTION_OFF_ON,
+        .custom_swtichType = ZCL_SWITCH_TYPE_MOMENTARY,
+        .custom_decoupled  = CUSTOM_SWITCH_DECOUPLED_OFF,
+    }
 };
 
 const zclAttrInfo_t onOffCfg1_attrTbl[] =
@@ -414,17 +400,15 @@ const zclAttrInfo_t onOffCfg1_attrTbl[] =
 
 #define ZCL_ON_OFF1_CFG_ATTR_NUM       sizeof(onOffCfg1_attrTbl) / sizeof(zclAttrInfo_t)
 
-//const zclAttrInfo_t onOffCfg2_attrTbl[] =
-//{
-//    { ZCL_ATTRID_SWITCH_TYPE,               ZCL_ENUM8,    R,  (u8*)&g_zcl_onOffCfgAttrs[1].switchType         },
-//    { ZCL_ATTRID_SWITCH_ACTION,             ZCL_ENUM8,    RW, (u8*)&g_zcl_onOffCfgAttrs[1].switchActions      },
-//    { CUSTOM_ATTRID_SWITCH_TYPE,            ZCL_ENUM8,    RW, (u8*)&g_zcl_onOffCfgAttrs[1].custom_swtichType  },
-//    { CUSTOM_ATTRID_DECOUPLED,              ZCL_ENUM8,    RWR,(u8*)&g_zcl_onOffCfgAttrs[1].custom_decoupled   },
-//
-//    { ZCL_ATTRID_GLOBAL_CLUSTER_REVISION,   ZCL_UINT16,   R,  (u8*)&zcl_attr_global_clusterRevision           },
-//};
-//
-//#define ZCL_ON_OFF2_CFG_ATTR_NUM       sizeof(onOffCfg2_attrTbl) / sizeof(zclAttrInfo_t)
+const zclAttrInfo_t onOffCfg2_attrTbl[] =
+{
+    { ZCL_ATTRID_SWITCH_TYPE,               ZCL_ENUM8,    R,  (u8*)&g_zcl_onOffCfgAttrs[1].switchType         },
+    { ZCL_ATTRID_SWITCH_ACTION,             ZCL_ENUM8,    RW, (u8*)&g_zcl_onOffCfgAttrs[1].switchActions      },
+    { CUSTOM_ATTRID_SWITCH_TYPE,            ZCL_ENUM8,    RW, (u8*)&g_zcl_onOffCfgAttrs[1].custom_swtichType  },
+    { CUSTOM_ATTRID_DECOUPLED,              ZCL_ENUM8,    RWR,(u8*)&g_zcl_onOffCfgAttrs[1].custom_decoupled   },
+    { ZCL_ATTRID_GLOBAL_CLUSTER_REVISION,   ZCL_UINT16,   R,  (u8*)&zcl_attr_global_clusterRevision           },
+};
+#define ZCL_ON_OFF2_CFG_ATTR_NUM       sizeof(onOffCfg2_attrTbl) / sizeof(zclAttrInfo_t)
 
 #endif //ZCL_ON_OFF_SWITCH_CFG
 
@@ -528,22 +512,21 @@ const zcl_specClusterInfo_t g_appClusterList1[] =
 
 uint8_t APP_CB_CLUSTER_NUM1 = (sizeof(g_appClusterList1)/sizeof(g_appClusterList1[0]));
 
-//const zcl_specClusterInfo_t g_appClusterList2[] =
-//{
-//#ifdef ZCL_GROUP
-//    {ZCL_CLUSTER_GEN_GROUPS,                MANUFACTURER_CODE_NONE, ZCL_GROUP2_ATTR_NUM,         group2_attrTbl,      zcl_group_register,     NULL            },
-//#endif
-//#ifdef ZCL_SCENE
-//    {ZCL_CLUSTER_GEN_SCENES,                MANUFACTURER_CODE_NONE, ZCL_SCENE2_ATTR_NUM,         scene2_attrTbl,      zcl_scene_register,     app_sceneCb     },
-//#endif
-//#ifdef ZCL_ON_OFF
-//    {ZCL_CLUSTER_GEN_ON_OFF,                MANUFACTURER_CODE_NONE, ZCL_ONOFF2_ATTR_NUM,         onOff2_attrTbl,      zcl_onOff_register,     app_onOffCb     },
-//#endif
-//#ifdef ZCL_ON_OFF_SWITCH_CFG
-//    {ZCL_CLUSTER_GEN_ON_OFF_SWITCH_CONFIG,  MANUFACTURER_CODE_NONE, ZCL_ON_OFF2_CFG_ATTR_NUM,    onOffCfg2_attrTbl,   zcl_onoffCfg_register,  NULL            },
-//#endif
-//    {ZCL_CLUSTER_GEN_MULTISTATE_INPUT_BASIC,MANUFACTURER_CODE_NONE, ZCL_MSINPUT2_ATTR_NUM,       msInput2_attrTbl,    zcl_multistate_input_register,  app_msInputCb},
-//};
-//
-//uint8_t APP_CB_CLUSTER_NUM2 = (sizeof(g_appClusterList2)/sizeof(g_appClusterList2[0]));
-//
+const zcl_specClusterInfo_t g_appClusterList2[] =
+{
+#ifdef ZCL_GROUP
+    {ZCL_CLUSTER_GEN_GROUPS,                MANUFACTURER_CODE_NONE, ZCL_GROUP2_ATTR_NUM,         group2_attrTbl,      zcl_group_register,     NULL            },
+#endif
+#ifdef ZCL_SCENE
+    {ZCL_CLUSTER_GEN_SCENES,                MANUFACTURER_CODE_NONE, ZCL_SCENE2_ATTR_NUM,         scene2_attrTbl,      zcl_scene_register,     app_sceneCb     },
+#endif
+#ifdef ZCL_ON_OFF
+    {ZCL_CLUSTER_GEN_ON_OFF,                MANUFACTURER_CODE_NONE, ZCL_ONOFF2_ATTR_NUM,         onOff2_attrTbl,      zcl_onOff_register,     app_onOffCb     },
+#endif
+#ifdef ZCL_ON_OFF_SWITCH_CFG
+    {ZCL_CLUSTER_GEN_ON_OFF_SWITCH_CONFIG,  MANUFACTURER_CODE_NONE, ZCL_ON_OFF2_CFG_ATTR_NUM,    onOffCfg2_attrTbl,   zcl_onoffCfg_register,  NULL            },
+#endif
+    {ZCL_CLUSTER_GEN_MULTISTATE_INPUT_BASIC,MANUFACTURER_CODE_NONE, ZCL_MSINPUT2_ATTR_NUM,       msInput2_attrTbl,    zcl_multistate_input_register,  app_msInputCb},
+};
+
+uint8_t APP_CB_CLUSTER_NUM2 = (sizeof(g_appClusterList2)/sizeof(g_appClusterList2[0]));
