@@ -1,27 +1,3 @@
-/********************************************************************************************************
- * @file    app_cfg.h
- *
- * @brief   This is the header file for app_cfg
- *
- * @author  Zigbee Group
- * @date    2021
- *
- * @par     Copyright (c) 2021, Telink Semiconductor (Shanghai) Co., Ltd. ("TELINK")
- *          All rights reserved.
- *
- *          Licensed under the Apache License, Version 2.0 (the "License");
- *          you may not use this file except in compliance with the License.
- *          You may obtain a copy of the License at
- *
- *              http://www.apache.org/licenses/LICENSE-2.0
- *
- *          Unless required by applicable law or agreed to in writing, software
- *          distributed under the License is distributed on an "AS IS" BASIS,
- *          WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *          See the License for the specific language governing permissions and
- *          limitations under the License.
- *
- *******************************************************************************************************/
 
 #pragma once
 
@@ -107,15 +83,6 @@ if defined(MCU_CORE_8258)
     #define BOARD                       BOARD_TUYA_ZTU
     #define CLOCK_SYS_CLOCK_HZ          48000000
     #define NV_ITEM_APP_USER_CFG        (NV_ITEM_APP_GP_TRANS_TABLE + 1)        // see sdk/proj/drivers/drv_nv.h
-
-#elif defined(MCU_CORE_8278)
-    #define FLASH_CAP_SIZE_1M           1
-    #define BOARD                       BOARD_8278_DONGLE//BOARD_8278_EVK
-    #define CLOCK_SYS_CLOCK_HZ          48000000
-#elif defined(MCU_CORE_B91)
-    #define FLASH_CAP_SIZE_1M           1
-    #define BOARD                       BOARD_B91_DONGLE//BOARD_B91_EVK
-    #define CLOCK_SYS_CLOCK_HZ          48000000
 #else
     #error "MCU is undefined!"
 #endif
