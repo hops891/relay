@@ -51,8 +51,8 @@ extern "C" {
  * max 24 symbols
  */
 
-#define ZCL_BASIC_MFG_NAME     {10,'S','l','a','c','k','y','-','D','I','Y'}
-#define ZCL_BASIC_MODEL_ID     {16,'T','S','0','0','0','1','_','p','o','w','e','r','-','S','l','D'}
+#define ZCL_BASIC_MFG_NAME     {8,'h','o','p','s','-','D','I','Y'}
+#define ZCL_BASIC_MODEL_ID     {18,'l','u','m','i','.','s','w','i','t','c','h','.','b','2','n','c','0','1'} 
 
 
 /**********************************************************************
@@ -82,7 +82,7 @@ extern "C" {
 #define PA_ENABLE                       OFF
 
 /* BDB */
-#define TOUCHLINK_SUPPORT               ON
+#define TOUCHLINK_SUPPORT               OFF
 #define FIND_AND_BIND_SUPPORT           OFF
 
 /* Board ID */
@@ -107,6 +107,9 @@ extern "C" {
 #endif
     #define CLOCK_SYS_CLOCK_HZ          32000000
 #elif defined(MCU_CORE_8258)
+    #define BEGIN_USER_DATA             0x72000   // (FLASH_ADDR_OF_APP_FW + FW_DATA_SIZE)   // begin address for saving energy
+    #define END_USER_DATA               0x76000   // (BEGIN_USER_DATA + USER_DATA_SIZE)
+    #define USER_DATA_SIZE              (END_USER_DATA - BEGIN_USER_DATA)   //(FLASH_ADDR_OF_OTA_IMAGE - BEGIN_USER_DATA)
 #if (CHIP_TYPE == TLSR_8258_1M)
     #define FLASH_CAP_SIZE_1M           1
     /********************** For 1M Flash only (bootloader mode) *********************************/
@@ -190,7 +193,7 @@ extern "C" {
 
 
 /* Watch dog module */
-#define MODULE_WATCHDOG_ENABLE                      OFF
+#define MODULE_WATCHDOG_ENABLE                      ON
 
 /* UART module */
 #define MODULE_UART_ENABLE                          OFF
@@ -202,14 +205,14 @@ extern "C" {
 /**********************************************************************
  * ZCL cluster support setting
  */
-#define ZCL_GROUP_SUPPORT                           ON
-#define ZCL_SCENE_SUPPORT                           ON
+#define ZCL_GROUP_SUPPORT                           OFF
+#define ZCL_SCENE_SUPPORT                           OFF
 #define ZCL_ON_OFF_SUPPORT                          ON
 #define ZCL_ON_OFF_SWITCH_CFG_SUPPORT               ON
-#define ZCL_OTA_SUPPORT                             ON
+#define ZCL_OTA_SUPPORT                             OFF
 #define ZCL_GP_SUPPORT                              ON
-#define ZCL_METERING_SUPPORT                        ON
-#define ZCL_ELECTRICAL_MEASUREMENT_SUPPORT          ON
+#define ZCL_METERING_SUPPORT                        OFF
+#define ZCL_ELECTRICAL_MEASUREMENT_SUPPORT          OFF
 #define ZCL_MULTISTATE_INPUT_SUPPORT                ON
 #if TOUCHLINK_SUPPORT
 #define ZCL_ZLL_COMMISSIONING_SUPPORT               ON
