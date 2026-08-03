@@ -81,7 +81,7 @@ extern "C" {
     #define USER_DATA_SIZE              (END_USER_DATA - BEGIN_USER_DATA)   //(FLASH_ADDR_OF_OTA_IMAGE - BEGIN_USER_DATA)
 
     #define BOARD                       BOARD_TUYA_ZTU
-    #define CLOCK_SYS_CLOCK_HZ          48000000
+    #define CLOCK_SYS_CLOCK_HZ          24000000
     #define NV_ITEM_APP_USER_CFG        (NV_ITEM_APP_GP_TRANS_TABLE + 1)        // see sdk/proj/drivers/drv_nv.h
 #else
     #error "MCU is undefined!"
