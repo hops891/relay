@@ -99,36 +99,11 @@ extern "C" {
 #define BOARD_TUYA_ZTU                  10
 
 /* Board define */
-#if defined(MCU_CORE_826x)
-#if !PA_ENABLE
-    #define BOARD                       BOARD_826x_DONGLE
-#else
-    #define BOARD                       BOARD_826x_DONGLE_PA
-#endif
-    #define CLOCK_SYS_CLOCK_HZ          32000000
-#elif defined(MCU_CORE_8258)
+if defined(MCU_CORE_8258)
     #define BEGIN_USER_DATA             0x72000   // (FLASH_ADDR_OF_APP_FW + FW_DATA_SIZE)   // begin address for saving energy
     #define END_USER_DATA               0x76000   // (BEGIN_USER_DATA + USER_DATA_SIZE)
     #define USER_DATA_SIZE              (END_USER_DATA - BEGIN_USER_DATA)   //(FLASH_ADDR_OF_OTA_IMAGE - BEGIN_USER_DATA)
-#if (CHIP_TYPE == TLSR_8258_1M)
-    #define FLASH_CAP_SIZE_1M           1
-    /********************** For 1M Flash only (bootloader mode) *********************************/
-    /* Flash map:
-        0x00000  bootloader
-        0x08000  Firmware
-        0x77000  OTA Image
-        0xE6000  NV
-        0xFC000  U_Cfg_Info
-        0xFE000  F_Cfg_Info
-        0xFF000  MAC address
-        0x100000 End Flash
-     */
-//    #define OTA_ADDRESS                 0x70000 // 0x77000 address rewriting for Tuya bootloader
-//    #define FW_DATA_SIZE                0x35000                                 // max size of firmware
-    #define BEGIN_USER_DATA             0x96000   // (FLASH_ADDR_OF_APP_FW + FW_DATA_SIZE)   // begin address for saving energy
-    #define END_USER_DATA               0xFC000   // (BEGIN_USER_DATA + USER_DATA_SIZE)
-    #define USER_DATA_SIZE              (END_USER_DATA - BEGIN_USER_DATA)   //(FLASH_ADDR_OF_OTA_IMAGE - BEGIN_USER_DATA)
-#endif
+
     #define BOARD                       BOARD_TUYA_ZTU
     #define CLOCK_SYS_CLOCK_HZ          48000000
     #define NV_ITEM_APP_USER_CFG        (NV_ITEM_APP_GP_TRANS_TABLE + 1)        // see sdk/proj/drivers/drv_nv.h
@@ -146,27 +121,7 @@ extern "C" {
 #endif
 
 /* Board include */
-#if (BOARD == BOARD_826x_EVK)
-    #include "board_826x_evk.h"
-#elif (BOARD == BOARD_826x_DONGLE)
-    #include "board_826x_dongle.h"
-#elif (BOARD == BOARD_826x_DONGLE_PA)
-    #include "board_826x_dongle_pa.h"
-#elif (BOARD == BOARD_8258_DONGLE)
-    #include "board_8258_dongle.h"
-#elif (BOARD == BOARD_8258_EVK)
-    #include "board_8258_evk.h"
-#elif (BOARD == BOARD_8258_EVK_V1P2)
-    #include "board_8258_evk_v1p2.h"
-#elif (BOARD == BOARD_8278_EVK)
-    #include "board_8278_evk.h"
-#elif (BOARD == BOARD_8278_DONGLE)
-    #include "board_8278_dongle.h"
-#elif (BOARD == BOARD_B91_EVK)
-    #include "board_b91_evk.h"
-#elif (BOARD == BOARD_B91_DONGLE)
-    #include "board_b91_dongle.h"
-#elif (BOARD == BOARD_TUYA_ZTU)
+if (BOARD == BOARD_TUYA_ZTU)
     #include "board_tuya_ztu.h"
 #endif
 
@@ -215,7 +170,7 @@ extern "C" {
 #define ZCL_ELECTRICAL_MEASUREMENT_SUPPORT          OFF
 #define ZCL_MULTISTATE_INPUT_SUPPORT                ON
 #if TOUCHLINK_SUPPORT
-#define ZCL_ZLL_COMMISSIONING_SUPPORT               ON
+#define ZCL_ZLL_COMMISSIONING_SUPPORT               OFF
 #endif
 
 /**********************************************************************
