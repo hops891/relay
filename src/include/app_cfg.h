@@ -75,7 +75,7 @@ extern "C" {
 #define BOARD_TUYA_ZTU                  10
 
 /* Board define */
-if defined(MCU_CORE_8258)
+#if defined(MCU_CORE_8258)
     #define BEGIN_USER_DATA             0x72000   // (FLASH_ADDR_OF_APP_FW + FW_DATA_SIZE)   // begin address for saving energy
     #define END_USER_DATA               0x76000   // (BEGIN_USER_DATA + USER_DATA_SIZE)
     #define USER_DATA_SIZE              (END_USER_DATA - BEGIN_USER_DATA)   //(FLASH_ADDR_OF_OTA_IMAGE - BEGIN_USER_DATA)
@@ -88,7 +88,7 @@ if defined(MCU_CORE_8258)
 #endif
 
 /* Board include */
-if (BOARD == BOARD_TUYA_ZTU)
+#if (BOARD == BOARD_TUYA_ZTU)
     #include "board_tuya_ztu.h"
 #endif
 
