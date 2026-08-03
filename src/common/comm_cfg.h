@@ -35,10 +35,10 @@
 #define IMAGE_TYPE_CONTACT_SENSOR			(0x03 | (IMAGE_TYPE_BOOT_FLAG << 7))
 
 #ifndef MCU_CORE_8258
-#define MCU_CORE_8258   1
+	#define MCU_CORE_8258   1
 #endif
 
-if defined(MCU_CORE_8258)
+#if defined(MCU_CORE_8258)
 	#define CHIP_TYPE                   TLSR_8258_512K //TLSR_8258_1M //
 #endif
 
