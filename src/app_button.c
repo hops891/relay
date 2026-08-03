@@ -46,13 +46,21 @@ static void buttonSinglePressed(u8 btNum) {
     }
 }
 
-//static void buttonDoublePressed(u8 btNum) {
-//    printf("Command double click\r\n");
-//}
+static void buttonDoublePressed(u8 btNum) {
+    printf("Command double click\r\n");
+    cmdOnOff_toggle(APP_ENDPOINT2);
+}
 //
-//static void buttonTriplePressed(u8 btNum) {
-//    printf("Command triple click\r\n");
-//}
+static void buttonTriplePressed(u8 btNum) {
+    //printf("Command triple click\r\n");
+    if (relay_settings.switchType[0] != ZCL_SWITCH_TYPE_MULTIFUNCTION) {
+        relay_settings.switchType[0] = ZCL_SWITCH_TYPE_MULTIFUNCTION;
+        relay_settings.switchType[1] = ZCL_SWITCH_TYPE_MULTIFUNCTION;
+    } else {
+        relay_settings.switchType[0] = ZCL_SWITCH_TYPE_TOGGLE;
+        relay_settings.switchType[1] = ZCL_SWITCH_TYPE_TOGGLE;
+    }
+}
 //
 //static void buttonQuadruplePressed(u8 btNum) {
 //    printf("Command quadruple click\r\n");
