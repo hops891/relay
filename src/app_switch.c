@@ -29,6 +29,14 @@ static app_switch_t app_switch_cfg[AMT_RELAY] = {
         .timerFrCounterEvt = NULL,
         .timerMfCounterEvt = NULL,
     },
+    {
+        .status = SWITCH_FLOAT,
+        .debounce = (DEBOUNCE_SWITCH / 2),
+        .hold = false,
+        .counter = 0,
+        .timerFrCounterEvt = NULL,
+        .timerMfCounterEvt = NULL,
+    },
 };
 
 static app_switch_t *app_switch = app_switch_cfg;
@@ -62,7 +70,7 @@ static int32_t switch_counterFrCb(void *args) {
 //    printf("counter click: %d\r\n", app_switch[i].counter);
     if (app_switch[i].counter >= FR_COUNTER_MAX) {
 //        printf("Factory reset\r\n");
-        TL_SCHEDULE_TASK(switch_factory_reset_start, NULL);
+//        TL_SCHEDULE_TASK(switch_factory_reset_start, NULL);
     }
 
     if (app_switch[i].status == SWITCH_OFF && relay_settings.switchType [i] != ZCL_SWITCH_TYPE_MULTIFUNCTION) {
