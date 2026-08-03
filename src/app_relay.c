@@ -120,15 +120,15 @@ nv_sts_t relay_settings_restore() {
         printf("Default relay settings \r\n");
 #endif
         relay_settings_tmp.startUpOnOff[0] = ZCL_START_UP_ONOFF_SET_ONOFF_TO_OFF;
-//        relay_settings_tmp.startUpOnOff[1] = ZCL_START_UP_ONOFF_SET_ONOFF_TO_OFF;
+        relay_settings_tmp.startUpOnOff[1] = ZCL_START_UP_ONOFF_SET_ONOFF_TO_OFF;
         relay_settings_tmp.status_onoff[0] = ZCL_ONOFF_STATUS_OFF;
-//        relay_settings_tmp.status_onoff[1] = ZCL_ONOFF_STATUS_OFF;
+        relay_settings_tmp.status_onoff[1] = ZCL_ONOFF_STATUS_OFF;
         relay_settings_tmp.switchActions[0] = ZCL_SWITCH_ACTION_OFF_ON;
-//        relay_settings_tmp.switchActions[1] = ZCL_SWITCH_ACTION_OFF_ON;
+        relay_settings_tmp.switchActions[1] = ZCL_SWITCH_ACTION_OFF_ON;
         relay_settings_tmp.switchType[0] = ZCL_SWITCH_TYPE_MOMENTARY;
-//        relay_settings_tmp.switchType[1] = ZCL_SWITCH_TYPE_MOMENTARY;
+        relay_settings_tmp.switchType[1] = ZCL_SWITCH_TYPE_MOMENTARY;
         relay_settings_tmp.switch_decoupled[0] = CUSTOM_SWITCH_DECOUPLED_OFF;
-//        relay_settings_tmp.switch_decoupled[1] = CUSTOM_SWITCH_DECOUPLED_OFF;
+        relay_settings_tmp.switch_decoupled[1] = CUSTOM_SWITCH_DECOUPLED_OFF;
         relay_settings_tmp.current_max = DEFAULT_CURRENT_MAX;
         relay_settings_tmp.power_max = DEFAULT_POWER_MAX;
         relay_settings_tmp.voltage_min = DEFAULT_VOLTAGE_MIN;
@@ -140,15 +140,15 @@ nv_sts_t relay_settings_restore() {
 
     memcpy(&relay_settings, &relay_settings_tmp, (sizeof(relay_settings_t)));
     g_zcl_onOffAttrs[0].onOff = relay_settings.status_onoff[0];
-//    g_zcl_onOffAttrs[1].onOff = relay_settings.status_onoff[1];
+    g_zcl_onOffAttrs[1].onOff = relay_settings.status_onoff[1];
     g_zcl_onOffAttrs[0].startUpOnOff = relay_settings.startUpOnOff[0];
-//    g_zcl_onOffAttrs[1].startUpOnOff = relay_settings.startUpOnOff[1];
+    g_zcl_onOffAttrs[1].startUpOnOff = relay_settings.startUpOnOff[1];
     g_zcl_onOffCfgAttrs[0].custom_swtichType = g_zcl_onOffCfgAttrs[0].switchType = relay_settings.switchType[0];
-//    g_zcl_onOffCfgAttrs[1].custom_swtichType = g_zcl_onOffCfgAttrs[1].switchType = relay_settings.switchType[1];
+    g_zcl_onOffCfgAttrs[1].custom_swtichType = g_zcl_onOffCfgAttrs[1].switchType = relay_settings.switchType[1];
     g_zcl_onOffCfgAttrs[0].switchActions = relay_settings.switchActions[0];
-//    g_zcl_onOffCfgAttrs[1].switchActions = relay_settings.switchActions[1];
+    g_zcl_onOffCfgAttrs[1].switchActions = relay_settings.switchActions[1];
     g_zcl_onOffCfgAttrs[0].custom_decoupled = relay_settings.switch_decoupled[0];
-//    g_zcl_onOffCfgAttrs[1].custom_decoupled = relay_settings.switch_decoupled[1];
+    g_zcl_onOffCfgAttrs[1].custom_decoupled = relay_settings.switch_decoupled[1];
     g_zcl_msAttrs.current_max = relay_settings.current_max;
     g_zcl_msAttrs.power_max = relay_settings.power_max;
     g_zcl_msAttrs.voltage_min = relay_settings.voltage_min;
@@ -166,15 +166,15 @@ nv_sts_t relay_settings_restore() {
 
 void relay_settints_default() {
     relay_settings.startUpOnOff[0] = ZCL_START_UP_ONOFF_SET_ONOFF_TO_OFF;
-//        relay_settings.startUpOnOff[1] = ZCL_START_UP_ONOFF_SET_ONOFF_TO_OFF;
+        relay_settings.startUpOnOff[1] = ZCL_START_UP_ONOFF_SET_ONOFF_TO_OFF;
     relay_settings.status_onoff[0] = ZCL_ONOFF_STATUS_OFF;
-//        relay_settings.status_onoff[1] = ZCL_ONOFF_STATUS_OFF;
+        relay_settings.status_onoff[1] = ZCL_ONOFF_STATUS_OFF;
     relay_settings.switchActions[0] = ZCL_SWITCH_ACTION_OFF_ON;
-//        relay_settings.switchActions[1] = ZCL_SWITCH_ACTION_OFF_ON;
+        relay_settings.switchActions[1] = ZCL_SWITCH_ACTION_OFF_ON;
     relay_settings.switchType[0] = ZCL_SWITCH_TYPE_MOMENTARY;
-//        relay_settings.switchType[1] = ZCL_SWITCH_TYPE_MOMENTARY;
+        relay_settings.switchType[1] = ZCL_SWITCH_TYPE_MOMENTARY;
     relay_settings.switch_decoupled[0] = CUSTOM_SWITCH_DECOUPLED_OFF;
-//        relay_settings.switch_decoupled[1] = CUSTOM_SWITCH_DECOUPLED_OFF;
+        relay_settings.switch_decoupled[1] = CUSTOM_SWITCH_DECOUPLED_OFF;
     relay_settings.current_max = DEFAULT_CURRENT_MAX;
     relay_settings.power_max = DEFAULT_POWER_MAX;
     relay_settings.voltage_min = DEFAULT_VOLTAGE_MIN;
@@ -186,15 +186,15 @@ void relay_settints_default() {
     relay_settings_save();
 
     g_zcl_onOffAttrs[0].onOff = relay_settings.status_onoff[0];
-//    g_zcl_onOffAttrs[1].onOff = relay_settings.status_onoff[1];
+    g_zcl_onOffAttrs[1].onOff = relay_settings.status_onoff[1];
     g_zcl_onOffAttrs[0].startUpOnOff = relay_settings.startUpOnOff[0];
-//    g_zcl_onOffAttrs[1].startUpOnOff = relay_settings.startUpOnOff[1];
+    g_zcl_onOffAttrs[1].startUpOnOff = relay_settings.startUpOnOff[1];
     g_zcl_onOffCfgAttrs[0].custom_swtichType = g_zcl_onOffCfgAttrs[0].switchType = relay_settings.switchType[0];
-//    g_zcl_onOffCfgAttrs[1].custom_swtichType = g_zcl_onOffCfgAttrs[1].switchType = relay_settings.switchType[1];
+    g_zcl_onOffCfgAttrs[1].custom_swtichType = g_zcl_onOffCfgAttrs[1].switchType = relay_settings.switchType[1];
     g_zcl_onOffCfgAttrs[0].switchActions = relay_settings.switchActions[0];
-//    g_zcl_onOffCfgAttrs[1].switchActions = relay_settings.switchActions[1];
+    g_zcl_onOffCfgAttrs[1].switchActions = relay_settings.switchActions[1];
     g_zcl_onOffCfgAttrs[0].custom_decoupled = relay_settings.switch_decoupled[0];
-//    g_zcl_onOffCfgAttrs[1].custom_decoupled = relay_settings.switch_decoupled[1];
+    g_zcl_onOffCfgAttrs[1].custom_decoupled = relay_settings.switch_decoupled[1];
     g_zcl_msAttrs.current_max = relay_settings.current_max;
     g_zcl_msAttrs.power_max = relay_settings.power_max;
     g_zcl_msAttrs.voltage_min = relay_settings.voltage_min;
@@ -210,11 +210,15 @@ void dev_relay_init() {
     dev_relay.unit_relay[0].sw = SWITCH1_GPIO;
     dev_relay.unit_relay[0].rl = RELAY1_GPIO;
 
+    dev_relay.unit_relay[1].ep = APP_ENDPOINT2;
+    dev_relay.unit_relay[1].sw = SWITCH2_GPIO;
+    dev_relay.unit_relay[1].rl = RELAY2_GPIO;
+    
     if (relay_settings.switchType[0] == ZCL_SWITCH_TYPE_MULTIFUNCTION) {
         check_first_start(0);
     }
 
-//    if (relay_settings.switchType[1] == ZCL_SWITCH_TYPE_MULTIFUNCTION) {
-//        check_first_start(1);
-//    }
+    if (relay_settings.switchType[1] == ZCL_SWITCH_TYPE_MULTIFUNCTION) {
+        check_first_start(1);
+    }
 }
