@@ -37,7 +37,7 @@
     #define ZCL_BASIC_MFG_NAME      {6,'T','E','L','I','N','K'}
 #endif
 #ifndef ZCL_BASIC_MODEL_ID
-    #define ZCL_BASIC_MODEL_ID      {8,'T','L','S','R','8','2','6','x'}
+    #define ZCL_BASIC_MODEL_ID      {18,'l','u','m','i','.','s','w','i','t','c','h','.','b','2','n','c','0','1'} //lumi.switch.b2nc01
 #endif
 
 #ifndef BUILD_DATE
