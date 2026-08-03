@@ -60,7 +60,7 @@ static void buttonTriplePressed(u8 btNum) {
         relay_settings.switchType[0] = ZCL_SWITCH_TYPE_TOGGLE;
         relay_settings.switchType[1] = ZCL_SWITCH_TYPE_TOGGLE;
     }
-    relay_setting_save();
+    relay_settings_save();
 }
 //
 //static void buttonQuadruplePressed(u8 btNum) {
