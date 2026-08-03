@@ -1,7 +1,7 @@
 #ifndef SRC_INCLUDE_APP_RELAY_H_
 #define SRC_INCLUDE_APP_RELAY_H_
 
-#define AMT_RELAY   1
+#define AMT_RELAY   2
 
 #define PROTECT_CONTROL_OFF     0x00
 #define PROTECT_CONTROL_ON      0x01
