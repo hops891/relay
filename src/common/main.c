@@ -119,7 +119,7 @@ int flash_main(void){
 	drv_enable_irq();
 
 #if (MODULE_WATCHDOG_ENABLE)
-	drv_wd_setInterval(600);
+	drv_wd_setInterval(1000);
     drv_wd_start();
 #endif
 
