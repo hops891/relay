@@ -125,8 +125,8 @@ nv_sts_t relay_settings_restore() {
         relay_settings_tmp.status_onoff[1] = ZCL_ONOFF_STATUS_OFF;
         relay_settings_tmp.switchActions[0] = ZCL_SWITCH_ACTION_OFF_ON;
         relay_settings_tmp.switchActions[1] = ZCL_SWITCH_ACTION_OFF_ON;
-        relay_settings_tmp.switchType[0] = ZCL_SWITCH_TYPE_MOMENTARY;
-        relay_settings_tmp.switchType[1] = ZCL_SWITCH_TYPE_MOMENTARY;
+        relay_settings_tmp.switchType[0] = ZCL_SWITCH_TYPE_TOGGLE;
+        relay_settings_tmp.switchType[1] = ZCL_SWITCH_TYPE_TOGGLE;
         relay_settings_tmp.switch_decoupled[0] = CUSTOM_SWITCH_DECOUPLED_OFF;
         relay_settings_tmp.switch_decoupled[1] = CUSTOM_SWITCH_DECOUPLED_OFF;
         relay_settings_tmp.current_max = DEFAULT_CURRENT_MAX;
