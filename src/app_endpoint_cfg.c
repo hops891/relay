@@ -375,15 +375,15 @@ const zclAttrInfo_t onOff2_attrTbl[] = {
 
 zcl_onOffCfgAttr_t g_zcl_onOffCfgAttrs[AMT_RELAY] = {
     {
-        .switchType        = ZCL_SWITCH_TYPE_MOMENTARY,
+        .switchType        = ZCL_SWITCH_TYPE_TOGGLE,
         .switchActions     = ZCL_SWITCH_ACTION_OFF_ON,
-        .custom_swtichType = ZCL_SWITCH_TYPE_MOMENTARY,
+        .custom_swtichType = ZCL_SWITCH_TYPE_TOGGLE,
         .custom_decoupled  = CUSTOM_SWITCH_DECOUPLED_OFF,
     },
     {
-        .switchType        = ZCL_SWITCH_TYPE_MOMENTARY,
+        .switchType        = ZCL_SWITCH_TYPE_TOGGLE,
         .switchActions     = ZCL_SWITCH_ACTION_OFF_ON,
-        .custom_swtichType = ZCL_SWITCH_TYPE_MOMENTARY,
+        .custom_swtichType = ZCL_SWITCH_TYPE_TOGGLE,
         .custom_decoupled  = CUSTOM_SWITCH_DECOUPLED_OFF,
     }
 };
